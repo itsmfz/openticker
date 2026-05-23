@@ -15,7 +15,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
+        include:
+          - os: windows-latest
+            label: windows
+            build_cmd: npm run dist:win
+          - os: macos-latest
+            label: mac-arm64
+            build_cmd: npx electron-builder --mac --arm64
+          - os: macos-13
+            label: mac-x64
+            build_cmd: npx electron-builder --mac --x64
 
     steps:
       - uses: actions/checkout@v4
@@ -27,26 +36,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build (Windows)
-        if: matrix.os == 'windows-latest'
-        run: npm run dist:win
+      - name: Build
+        run: ${{ matrix.build_cmd }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build (macOS)
-        if: matrix.os == 'macos-latest'
-        run: npm run dist:mac
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Skip code signing for unsigned builds (free path)
           CSC_IDENTITY_AUTO_DISCOVERY: false
-          # Workaround for hdiutil race condition on Apple Silicon runners
           USE_HARD_LINKS: false
 
       - name: Upload installers
         uses: actions/upload-artifact@v4
         with:
-          name: openticker-${{ matrix.os }}
+          name: openticker-${{ matrix.label }}
           path: |
             dist/*.exe
             dist/*.dmg
