@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-13]
+        os: [windows-latest, macos-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -34,12 +34,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build (macOS)
-        if: matrix.os == 'macos-13'
+        if: matrix.os == 'macos-latest'
         run: npm run dist:mac
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Skip code signing for unsigned builds (free path)
           CSC_IDENTITY_AUTO_DISCOVERY: false
+          # Workaround for hdiutil race condition on Apple Silicon runners
+          USE_HARD_LINKS: false
 
       - name: Upload installers
         uses: actions/upload-artifact@v4

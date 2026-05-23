@@ -72,7 +72,9 @@
       "category": "public.app-category.finance"
     },
     "dmg": {
-      "title": "OpenTicker ${version}"
+      "title": "OpenTicker ${version}",
+      "format": "UDZO",
+      "writeUpdateInfo": false
     }
   }
 }
