@@ -1,0 +1,78 @@
+{
+  "name": "openticker",
+  "productName": "OpenTicker",
+  "version": "1.0.0",
+  "description": "Open-source financial-analysis terminal — institutional-grade market intelligence on your desktop.",
+  "main": "main.js",
+  "author": "Mohammed Fawwaaz Ahmed",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "icons": "node scripts/build-icons.js",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:all": "electron-builder -mwl"
+  },
+  "devDependencies": {
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.0",
+    "png2icons": "^2.0.1",
+    "sharp": "^0.34.5"
+  },
+  "build": {
+    "appId": "com.openticker.app",
+    "productName": "OpenTicker",
+    "files": [
+      "main.js",
+      "terminal.html",
+      "vendor/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "OpenTicker-Portable-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "OpenTicker"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "category": "public.app-category.finance"
+    },
+    "dmg": {
+      "title": "OpenTicker ${version}"
+    }
+  }
+}
